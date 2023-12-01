@@ -1,2 +1,47 @@
+## https://adventofcode.com/2023/day/1
+from pathlib.path import cwd
+from pathlib.path import Path
+
+
 def main():
     print("Day 1")
+    let currentPath = cwd()
+    let file = currentPath/"day1/input.txt"
+
+    ## iterate over lines
+    ## per line
+
+    with open(file, "r") as f:
+        let input = f.read()
+
+        var sum = 0
+        var first_number = String("0")
+        var last_number =  String("0")
+
+        for i in range(len(input)):
+            let char = input[i]
+            
+            if isdigit(ord(char)):
+                print (char)
+                if first_number == "0":
+                    first_number = char
+                else:
+                    last_number = char;
+                
+            if char == '\n' or i == len(input) -1:
+                if last_number == "0":
+                    last_number = first_number
+                print(first_number + ' ' + last_number)
+                sum += atol(first_number + last_number)
+                first_number = String("0")
+                last_number = String("0")
+
+        print(sum)            
+
+            
+
+
+
+
+    
+
