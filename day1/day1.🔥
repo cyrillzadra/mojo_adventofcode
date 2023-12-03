@@ -3,8 +3,6 @@ from pathlib.path import cwd
 from pathlib.path import Path
 from testing import assert_true
 
-
-
 def main():
     print("Day 1")
     let currentPath = cwd()

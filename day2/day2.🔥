@@ -1,0 +1,33 @@
+## https://adventofcode.com/2023/day/2
+
+from pathlib.path import cwd
+from pathlib.path import Path
+from simplelist import SimpleList
+from testing import assert_true
+
+def main():
+    print("Day 2")
+    let currentPath = cwd()
+    let file = currentPath/"day2/input_small.txt"
+
+    partOne(file)
+
+def partOne(file: Path):
+    print("Part One")
+
+
+def readLines(file: Path):
+    let v : DynamicVector[String] = DynamicVector[String](0)
+    with open(file, "r") as f:
+        let input = f.read()
+
+        let start_index : Int = 0
+        for i in range(len(input)):
+            let char = input[i]
+            if char == '\n':
+                let line = input[start_index:i]
+                v.push_back(line) # not supported by mojo yet
+
+  
+
+
