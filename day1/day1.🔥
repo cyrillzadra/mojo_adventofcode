@@ -1,16 +1,20 @@
 ## https://adventofcode.com/2023/day/1
 from pathlib.path import cwd
 from pathlib.path import Path
+from testing import assert_true
+
 
 
 def main():
     print("Day 1")
     let currentPath = cwd()
     let file = currentPath/"day1/input.txt"
+    partOne(file)
+    partTwo(file)
 
-    ## iterate over lines
-    ## per line
 
+def partOne(file: Path):
+    print("Part One")
     with open(file, "r") as f:
         let input = f.read()
 
@@ -22,26 +26,50 @@ def main():
             let char = input[i]
             
             if isdigit(ord(char)):
-                print (char)
                 if first_number == "0":
                     first_number = char
                 else:
                     last_number = char;
                 
-            if char == '\n' or i == len(input) -1:
+            if char == '\n' or i == len(input) - 1:
                 if last_number == "0":
                     last_number = first_number
-                print(first_number + ' ' + last_number)
                 sum += atol(first_number + last_number)
                 first_number = String("0")
                 last_number = String("0")
 
-        print(sum)            
-
-            
-
-
+        print("Result: ", sum)
+        assert_true(sum == 56506, "answershould be 56506")             
+   
 
 
-    
+def partTwo(file: Path):
+    print("Part Two")
+    let nums = StaticTuple[9]("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+    with open(file, "r") as f:
+        let input = f.read()
+        var sum = 0
+        var s = String("")
+        
+        for i in range(len(input)):
+            let char = input[i]
+            let digit = get_digit(input, i)
+            s.__iadd__(digit)
+                        
+            if (char == '\n' or i == len(input) - 1) and len(s) > 0:
+                let last_index = len(s) - 1
+                sum += atol(s[0] + s[last_index])
+                s = String("")
 
+        print("Result: ", sum)
+        assert_true(sum == 56017, "answer should be 56017")    
+
+def get_digit(input: String, pos: Int) -> String:
+    let nums = StaticTuple[9]("one", "two", "three", "four", "five", "six", "seven", "eight", "nine")
+    if isdigit(ord(input[pos])):
+        return input[pos]
+    else:
+        for y in range(nums.__len__()):
+            if input[pos:pos+len(nums[y])] == nums[y]:
+                return String(y + 1)
+    return String("")
