@@ -2,31 +2,63 @@
 
 from pathlib.path import cwd
 from pathlib.path import Path
-from simplelist import SimpleList
+from utils.vector import DynamicVector
+from tensor import Tensor
 from testing import assert_true
 
 def main():
     print("Day 2")
     let currentPath = cwd()
-    let file = currentPath/"day2/input_small.txt"
+    let file = currentPath/"day2/input.txt"
 
     partOne(file)
 
 def partOne(file: Path):
     print("Part One")
+    let lines : DynamicVector[String] = readLines(file);
+    let number_of_lines = len(lines)
+    print("Number of lines in input ", number_of_lines)
+    var possibles = Tensor[DType.int8](number_of_lines)
+    for i in range(number_of_lines):
+        let line : String = lines[i]
+        let start_index : Int = line.find(':',0) + 2
+        let set = line[start_index: len(line)].split("; ")
+        for g in range(len(set)):
+           let games = set[g].split(', ')
+           for c in range(len(games)):
+                let cube = games[c].split(' ')
+                let amount =  int(MyInt(cube[0]));
+                let color = cube[1]
+                if color  == "red" and amount > 12
+                  or color == "green" and amount > 13
+                  or color == "blue" and amount > 14:
+                  possibles[i] = -1
+                else:
+                  if possibles[i] != -1:
+                    possibles[i] = 1
+
+    var sum = 0
+    print(possibles.shape())
+    for p in range(len(lines)):
+        print("Line ", p+1, " -> ", possibles[p])
+        if possibles[p] == 1:
+            sum += p+1
+    
+    print("Result: ", sum)
+    assert_true(sum == 2795, "answer should be 2795")      
 
 
-def readLines(file: Path):
-    let v : DynamicVector[String] = DynamicVector[String](0)
-    with open(file, "r") as f:
-        let input = f.read()
+## 12 red cubes, 13 green cubes, and 14 blue cubes
 
-        let start_index : Int = 0
-        for i in range(len(input)):
-            let char = input[i]
-            if char == '\n':
-                let line = input[start_index:i]
-                v.push_back(line) # not supported by mojo yet
+def readLines(file: Path) -> DynamicVector[String]:
+    return file.read_text().split('\n')
+
+@value
+struct MyInt(IntableRaising):
+    var digits: String
+
+    fn __int__(self) raises -> Int:
+        return atol(self.digits)
 
   
 
