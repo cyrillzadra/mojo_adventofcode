@@ -11,11 +11,12 @@ def main():
     let currentPath = cwd()
     let file = currentPath/"day2/input.txt"
 
-    partOne(file)
+    part_one(file)
+    part_two(file)
 
-def partOne(file: Path):
+def part_one(file: Path):
     print("Part One")
-    let lines : DynamicVector[String] = readLines(file);
+    let lines : DynamicVector[String] = read_lines(file)
     let number_of_lines = len(lines)
     print("Number of lines in input ", number_of_lines)
     var possibles = Tensor[DType.int8](number_of_lines)
@@ -29,6 +30,7 @@ def partOne(file: Path):
                 let cube = games[c].split(' ')
                 let amount =  int(MyInt(cube[0]));
                 let color = cube[1]
+                ## 12 red cubes, 13 green cubes, and 14 blue cubes
                 if color  == "red" and amount > 12
                   or color == "green" and amount > 13
                   or color == "blue" and amount > 14:
@@ -38,20 +40,59 @@ def partOne(file: Path):
                     possibles[i] = 1
 
     var sum = 0
-    print(possibles.shape())
     for p in range(len(lines)):
-        print("Line ", p+1, " -> ", possibles[p])
         if possibles[p] == 1:
-            sum += p+1
+            sum += p + 1
     
     print("Result: ", sum)
     assert_true(sum == 2795, "answer should be 2795")      
 
 
-## 12 red cubes, 13 green cubes, and 14 blue cubes
+def part_two(file: Path):
+    print("Part Two")
+    let lines : DynamicVector[String] = read_lines(file)
+    var sum = 0
+    let number_of_lines = len(lines)
+    print("Number of lines in input ", number_of_lines)
+    for i in range(number_of_lines):
+        let line : String = lines[i]
+        let start_index : Int = line.find(':',0) + 2
+        let set = line[start_index: len(line)].split("; ")
+        var count = Count()
+        for g in range(len(set)):
+           let games = set[g].split(', ')
+           for c in range(len(games)):
+                let cube = games[c].split(' ')
+                let amount =  int(MyInt(cube[0]));
+                let color = cube[1]
 
-def readLines(file: Path) -> DynamicVector[String]:
+                if color == "red" and count.red < amount:
+                    count.red = amount
+                if color == "green" and count.green < amount:
+                    count.green = amount
+                if color == "blue" and count.blue < amount:
+                    count.blue = amount
+        sum += (count.red * count.green * count.blue)
+
+    
+    print("Result: ", sum)
+    assert_true(sum == 75561, "answer should be 75561")      
+         
+
+
+
+def read_lines(file: Path) -> DynamicVector[String]:
     return file.read_text().split('\n')
+
+struct Count:
+    var red: Int
+    var green: Int
+    var blue: Int
+
+    fn __init__(inout self):
+        self.red = 0
+        self.green = 0
+        self.blue = 0
 
 @value
 struct MyInt(IntableRaising):
