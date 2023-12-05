@@ -76,10 +76,7 @@ def part_two(file: Path):
 
     
     print("Result: ", sum)
-    assert_true(sum == 75561, "answer should be 75561")      
-         
-
-
+    assert_true(sum == 75561, "answer should be 75561")            
 
 def read_lines(file: Path) -> DynamicVector[String]:
     return file.read_text().split('\n')

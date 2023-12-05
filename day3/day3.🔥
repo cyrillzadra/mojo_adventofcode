@@ -1,0 +1,69 @@
+## https://adventofcode.com/2023/day/3
+
+from pathlib.path import cwd
+from pathlib.path import Path
+from utils.vector import DynamicVector
+from testing import assert_true
+
+def main():
+    print("Day 3")
+    let currentPath = cwd()
+    let file = currentPath/"day3/input_small.txt"
+
+    part_one(file)
+    #part_two(file)
+
+def part_one(file: Path):
+    print("Part One")
+    var result = 0
+    let lines = read_lines(file)
+    var numbers = DynamicVector[Int]()
+    var special_chars = DynamicVector[MySpecialChar]()
+    for i in range(len(lines)):
+        let line = lines[i]
+        for c in range(len(line)):
+            let char = line[c]
+            var digit = String("")
+            if isdigit(ord(char)):
+                digit.__iadd__(char)
+            else:
+                if len(digit) > 0:
+                    # store digit to dynamic vector as Int
+                    let n = int(MyInt(digit, i, c))
+                    numbers.push_back(n)
+                    digit = String("")
+                if char != "." :
+                    special_chars.push_back(MySpecialChar(char, i, c))
+
+    print("Result: ", result)
+    assert_true(result == 2795, "answer should be 2795")      
+
+
+def part_two(file: Path):
+    print("Part Two")
+    var result = 0
+    result = 1
+    
+    print("Result: ", result)
+    assert_true(result == 75561, "answer should be 75561")      
+
+@value
+struct MyInt(IntableRaising):
+    var digits: String
+    var line: Int
+    var end_pos: Int
+
+    fn __int__(self) raises -> Int:
+        return atol(self.digits)
+
+@value
+struct MySpecialChar[IntableRaising]:
+    var char: String
+    var line: Int
+    var pos: Int
+
+    fn __int__(self) raises -> Int:
+        return atol(self.char)
+
+def read_lines(file: Path) -> DynamicVector[String]:
+    return file.read_text().split('\n')
